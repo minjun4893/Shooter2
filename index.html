@@ -105,7 +105,7 @@ mb.addEventListener('click',()=>{setMode(mode==='ai'?'two':'ai');mb.blur()});
 function burst(x,y,n,k,sp,life=.5,s=4){for(let i=0;i<n;i++){const a=Math.random()*6.283,v=sp*(.3+Math.random()*.7);
 parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:life,m:life,k,s})}}
 function fire(p,a){if(p.cd>0)return;p.cd=1;const c=Math.cos(a),s=Math.sin(a);const k=p.g?180:420;p.vx-=c*k;p.vy-=s*k;if(!p.g)p.lk=.35;const mx=p.x+c*(PR+14),my=p.y-PR+s*(PR+14);
-for(let j=0;j<p.nb;j++){const t=a+(j-(p.nb-1)/2)*.14,c2=Math.cos(t),s2=Math.sin(t);bullets.push({x:mx,y:my,vx:c2*720,vy:s2*720,o:p,l:1e9,n:0,m:p.bm,r:p.r,d:20*p.r/4,e:p.ex,z:p.pz})}for(let i=0;i<8;i++){const t=a+(Math.random()-.5)*1.1,v=180+Math.random()*260;parts.push({x:mx,y:my,vx:Math.cos(t)*v,vy:Math.sin(t)*v,l:.3,m:.3,k:i%2?'fire':'fire2',s:3})}}
+for(let j=0;j<p.nb;j++){const t=a+(j-(p.nb-1)/2)*.14,c2=Math.cos(t),s2=Math.sin(t);bullets.push({x:mx,y:my,vx:c2*720,vy:s2*720,o:p,l:1e9,n:0,m:p.bm,r:p.r,d:20*p.r/4*Math.pow(.7,p.nb-1),e:p.ex,z:p.pz})}for(let i=0;i<8;i++){const t=a+(Math.random()-.5)*1.1,v=180+Math.random()*260;parts.push({x:mx,y:my,vx:Math.cos(t)*v,vy:Math.sin(t)*v,l:.3,m:.3,k:i%2?'fire':'fire2',s:3})}}
 function step(p,dt){
 const c=p.ctl(),acc=p.g?1000:600;p.cd-=dt;p.lk=Math.max(0,(p.lk||0)-dt);
 if(p.pd>0&&!locked){const x=Math.min(p.pd,p.pr*dt);p.pd-=x;hurt(p,x);if(Math.random()<.35)parts.push({x:p.x+(Math.random()-.5)*20,y:p.y-PR*2+Math.random()*10,vx:0,vy:-30,l:.6,m:.6,k:'poison',s:4})}
@@ -125,7 +125,7 @@ if(p.y>=GY){p.y=GY;p.vy=0;p.g=true}
 else if(p.vy>=0)for(const q of plats)if(p.x>q.x-6&&p.x<q.x+q.w+6&&oy0<=q.y&&p.y>=q.y){p.y=q.y;p.vy=0;p.g=true;break}
 }
 function bstep(dt){
-for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];if(b.z)b.vy+=900*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;
+for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];if(b.z)b.vy+=1600*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;
 if(b.l<=0){explode(b);bullets.splice(i,1);continue}
 let hit=0;
 if(b.x<0||b.x>W){b.x=b.x<0?0:W;b.vx=-b.vx;hit=1}
@@ -150,7 +150,7 @@ function loop(t){
 const dt=Math.min(.033,(t-last)/1000);last=t;
 bot.t-=dt;if(bot.t<=0){bot.t=.5+Math.random()*1;const d=Math.floor(Math.random()*3)-1;bot.l=d<0;bot.r=d>0;bot.j=Math.random()<.5}
 bot.s-=dt;if(mode==='ai'&&bot.s<=0&&!ps[0].dead&&!ps[1].dead){bot.s=1.1+Math.random()*.9;
-const dx=ps[0].x-ps[1].x,dy=ps[0].y-ps[1].y;let a=Math.atan2(dy,dx)+(Math.random()-.5)*.35;if(ps[1].pz)a-=Math.sign(dx)*.5*Math.asin(Math.min(1,900*Math.hypot(dx,dy)/518400));ps[1].aim=a;fire(ps[1],a)}
+const dx=ps[0].x-ps[1].x,dy=ps[0].y-ps[1].y;let a=Math.atan2(dy,dx)+(Math.random()-.5)*.35;if(ps[1].pz)a-=Math.sign(dx)*.5*Math.asin(Math.min(1,1600*Math.hypot(dx,dy)/518400));ps[1].aim=a;fire(ps[1],a)}
 if(locked){lt-=dt;if(lt<=0&&!choosing){if(matchWin){rounds.length=0;matchWin=0;ps.forEach(q=>{q.bm=1;q.nb=1;q.r=4;q.ex=0;q.pz=0})}note='';ps.forEach(q=>{q.pd=0;q.hp=120;q.x=q.sx;q.y=GY;q.vx=q.vy=0;q.dead=0});bullets.length=0;locked=0}}
 ps.forEach(p=>{if(!p.dead)for(let i=0;i<2;i++)step(p,dt/2)});
 bstep(dt);
