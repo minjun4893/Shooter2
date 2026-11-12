@@ -141,7 +141,7 @@ else if(p.vy>=0)for(const q of plats)if(p.x>q.x-6&&p.x<q.x+q.w+6&&oy0<=q.y&&p.y>
 }
 function bstep(dt){
 for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];if(b.st){b.t-=dt;if(b.sp){if(b.sp.dead)b.t=0;else{b.x=b.sp.x+b.ox;b.y=b.sp.y-PR+b.oy}}if(b.t<=0){explode(b);bullets.splice(i,1)}continue}
-if(b.kn){const sp=Math.hypot(b.vx,b.vy),ns=Math.min(1800,sp+3000*dt);b.vx*=ns/sp;b.vy*=ns/sp}
+if(b.kn){const sp=Math.hypot(b.vx,b.vy),ns=Math.min(1400,sp+2600*dt);b.vx*=ns/sp;b.vy*=ns/sp}
 if(b.z)b.vy+=1600*dt;else if(b.bb)b.vy+=1200*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.l-=dt;
 if(b.l<=0){explode(b);bullets.splice(i,1);continue}
 let hit=0;
